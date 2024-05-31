@@ -1,7 +1,8 @@
 from celery import shared_task
-from .ticker import RecurrentTicker
+
+from ticker.ticker import BuenbitTicker
 
 
 @shared_task
 def fetch_and_set_buenbit_data():
-    RecurrentTicker().set_ticker()
+    BuenbitTicker().set_ticker()

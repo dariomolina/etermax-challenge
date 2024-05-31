@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from django.core.cache import cache
+from django_redis import get_redis_connection
+
+redis_client = get_redis_connection()
 
 
 class RedisCacheManagerBase(ABC):
@@ -13,7 +15,12 @@ class RedisCacheManagerBase(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_data(request) -> Dict:
+    def get_data(key: str) -> Dict:
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def get_z_range_by_score(key: str, start: str, end: str) -> Dict:
         raise NotImplementedError
 
 
@@ -21,9 +28,14 @@ class RedisCacheManager(RedisCacheManagerBase):
 
     @staticmethod
     def set_data(key: str, value: Dict, timeout=None) -> None:
-        cache.set(key, value, timeout=timeout)
+        redis_client.zadd(key, value)
 
     @staticmethod
     def get_data(key: str) -> Dict:
-        value = cache.get(key)
+        value = redis_client.get(key)
         return value
+
+    @staticmethod
+    def get_z_range_by_score(key: str, start: str, end: str):
+        range_data = redis_client.zrangebyscore(key, start, end, withscores=True)
+        return range_data

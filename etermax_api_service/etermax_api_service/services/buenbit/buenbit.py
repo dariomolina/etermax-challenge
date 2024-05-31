@@ -33,7 +33,7 @@ class BuenbitApiHandle:
     def __init__(self):
         self.buenbit_service = BuenbitApiService()
 
-    def handle(self, market_identifier: str = "btcars"):
+    def handle(self, market_identifier: str):
         data = self.buenbit_service.get()
         btc_ars_data = data['object'][market_identifier]
 

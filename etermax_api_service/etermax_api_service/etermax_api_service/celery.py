@@ -7,7 +7,7 @@ from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'etermax_api_service.settings')
 
-app = Celery('etermax_api_service', broker=settings.LOCATION, result_backend=settings.LOCATION)
+app = Celery('etermax_api_service', broker=settings.REDIS_LOCATION, result_backend=settings.REDIS_LOCATION)
 app.conf.enable_utc = False
 app.config_from_object(settings, namespace='CELERY')
 app.autodiscover_tasks()

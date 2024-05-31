@@ -90,15 +90,14 @@ DATABASES = {
    }
 }
 
-LOCATION = f"redis://redis:{os.environ.get('REDIS_PORT', '')}/1"
+REDIS_LOCATION = f"redis://{os.environ.get('REDIS_HOST', '')}:{os.environ.get('REDIS_PORT', '')}/0"
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": LOCATION,
+        "LOCATION": REDIS_LOCATION,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": os.environ.get('REDIS_PASSWORD', '')
         }
     }
 }
@@ -107,9 +106,8 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-CELERY_BROKER_URL = LOCATION
-#CELERY_RESULT_BACKEND = LOCATION
-
+# Redis configuration for Celery
+CELERY_BROKER_URL = REDIS_LOCATION
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

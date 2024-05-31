@@ -42,6 +42,8 @@ services:
     command: /start-celeryworker
     volumes:
       - ./etermax_api_service:/app
+    env_file:
+      - .env
     depends_on:
       - redis
       - etermax-api-service
@@ -54,6 +56,8 @@ services:
       context: .
       dockerfile: compose/local/django/Dockerfile
     command: /start-celerybeat
+    env_file:
+      - .env
     volumes:
       - ./etermax_api_service:/app
     depends_on:
@@ -61,9 +65,6 @@ services:
       - etermax-api-service
     networks:
       etermax-network:
-
-#CELERY_FLOWER_USER=clicoh
-#CELERY_FLOWER_PASSWORD=clicoh
 
 volumes:
   etermax-api-service:
