@@ -73,7 +73,7 @@ class BuenbitTicker(TickerManagerDataBase):
             end=until_timestamp
         )
         range_data = [
-            {"timestamp": float(timestamp), "price": float(price)}
+            {"timestamp": int(timestamp), "price": float(price)}
             for price, timestamp in range_data
         ]
         return range_data

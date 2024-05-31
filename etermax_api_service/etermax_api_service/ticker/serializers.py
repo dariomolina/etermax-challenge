@@ -6,5 +6,5 @@ class TickerAveragePriceSerializer(serializers.Serializer):
 
 
 class TickerSerializer(serializers.Serializer):
-    timestamp = serializers.FloatField(required=True)
+    timestamp = serializers.IntegerField(required=True)
     price = serializers.FloatField(required=True)
