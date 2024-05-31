@@ -29,7 +29,7 @@ RUN chmod +x /start-celerybeat
 
 WORKDIR /app
 
-EXPOSE 8080
+EXPOSE 8000
 
 FROM base as local
 RUN pip install debugpy -t /tmp ipython && pip install --upgrade 'jedi<0.18.0'
