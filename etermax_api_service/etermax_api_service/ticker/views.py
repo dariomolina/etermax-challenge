@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from services.buenbit.buenbit import BuenbitApiHandle
 from ticker.serializers import TickerSerializer, TickerAveragePriceSerializer
 from ticker.ticker import BuenbitTicker
 
@@ -50,9 +48,9 @@ class TickerListView(APIView):
         page_size = request.GET.get('page_size', 10)
 
         if not since_timestamp:
-            since_timestamp = "-inf"
+            since_timestamp = float("-inf")
         if not until_timestamp:
-            until_timestamp = "+sup"
+            until_timestamp = float("+inf")
 
         # except ValueError:
         #     return Response({"error": "Invalid parameters."}, status=status.HTTP_400_BAD_REQUEST)
