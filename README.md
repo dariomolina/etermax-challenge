@@ -45,9 +45,11 @@ Además, incluye una suite de pruebas unitarias.
 - **Requests:** 2.32.3
 
 ## Sobre Docker y docker-compose
-El Proyecto se realizó aplicando un entorno de docker y docker-compose
+El Proyecto se realizó aplicando un entorno de docker y docker-compose.
+
 Docker es una plataforma de contenedorización que permite a los desarrolladores empaquetar 
-aplicaciones y sus dependencias en contenedores
+aplicaciones y sus dependencias en contenedores.
+
 Docker Compose es una herramienta para definir y ejecutar aplicaciones Docker 
 multi-contenedor. Con Docker Compose, puedes utilizar un archivo YAML para configurar los 
 servicios de tu aplicación, incluyendo contenedores, redes, y volúmenes.
@@ -142,7 +144,8 @@ Tenemos definidos 4 servicios:
 
 ### Llamada Recurrente al Servicio REST
 
-El microservicio realiza una llamada recurrente cada 10 segundos al siguiente servicio REST para obtener el precio del Bitcoin en pesos argentinos:
+El microservicio realiza una llamada recurrente cada 10 segundos al servicio REST para 
+obtener el precio del Bitcoin en pesos argentinos:
 
 - **URL:** [Buenbit API - Market Tickers](https://be.buenbit.com/api/market/tickers)
 
@@ -245,27 +248,66 @@ docker-compose up
 Luego de levantar el proyecto, podemos ingresar a los siguientes endpoints:
 
 
-* #### Average price
+* ### Average price
 Retorna el promedio de precio entre dos timestamps dados
 Es requisito agregar los queryparams since y until para el funcionamiento correcto del endpoint
 ```
-http://localhost:8000/api/average-price/?since=1717135270&until=1717135429
+GET http://localhost:8000/api/average-price/?since=1717135270&until=1717135429
+```
+Respuesta:
+```
+{
+    "average_price": 84873600.0
+}
 ```
 
-* #### Ticker list
+* ### Ticker list
 Retorna una lista paginada con toda la data relacionada al timestamp y al precio correspondiente
 
 - page_size sirve para obtener una cantidad n de registros por cada página, en caso de no pasarle
 ese argumento, por default se setea en 10
 - page es usada pa la paginación y poder obtener info de una página u otra
 - since y until son los filtros para el timestamp, con ellos obtenemos la info en relación los
-datos que estén entre since y until.
+datos que estén entre since y until. Estos queryparams son opcionales
 ```
-http://localhost:8000/api/ticker-list/?page=1&since=1717137541&until=1817137589&page_size=10
+http://localhost:8000/api/ticker-list/?page=1&since=1717137541&until=1817137589&page_size=5
 ```
+Respuesta:
+```
+{
+    "count": 11,
+    "next": "http://localhost:8000/api/ticker-list/?page=2&page_size=5&since=1717137541&until=1817137589",
+    "previous": null,
+    "results": [
+        {
+            "timestamp": 1717184864,
+            "price": 84873600.0
+        },
+        {
+            "timestamp": 1717184874,
+            "price": 84873100.0
+        },
+        {
+            "timestamp": 1717184904,
+            "price": 84850500.0
+        },
+        {
+            "timestamp": 1717184914,
+            "price": 84849600.0
+        },
+        {
+            "timestamp": 1717184924,
+            "price": 84823600.0
+        }
+    ]
+}
+```
+
 
 
 ## Tests
+Se utilizó pytest como herramienta de testing para Python.
+
 Para poder ejecutar los tests podemos correr el siguiente comando
 ```
 docker-compose run --rm etermax-api-service pytest -s -vv --disable-warnings
