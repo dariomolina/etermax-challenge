@@ -79,7 +79,7 @@ class BuenbitApiHandle:
         """
         self.buenbit_service = BuenbitApiService()
 
-    def handle(self, market_identifier: str) -> Dict[str, Union[int, str]]:
+    def handle(self, market_identifier: str) -> Dict[str, Union[int, float]]:
         """
         Handle the Buenbit API response.
 
@@ -102,7 +102,7 @@ class BuenbitApiHandle:
 
             ticker_data = {
                 'timestamp': int(datetime.now().timestamp()),
-                'price': btc_ars_data['selling_price']
+                'price': float(btc_ars_data['selling_price'])
             }
         except KeyError as error:
             raise KeyError(f"Unexpected response structure: {error}")

@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "98477a68-1110-403b-84cc-ee99ee5d2cf2",
+		"name": "etermax-tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "19890376"
+	},
+	"item": [
+		{
+			"name": "get the average bitcoin price success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for status 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test for JSON response",
+							"pm.test(\"Response is JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"// Test for specific field in response",
+							"pm.test(\"Check average price in response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('average_price');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/average-price/?since=1717276416&until=1817135429",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"average-price",
+						""
+					],
+					"query": [
+						{
+							"key": "since",
+							"value": "1717276416"
+						},
+						{
+							"key": "until",
+							"value": "1817135429"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get the average bitcoin without queryparams. Bad Request 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for status 400",
+							"pm.test(\"Status code is 400 Bad Request\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"// Test for JSON response",
+							"pm.test(\"Response is JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"// Test for specific field in response",
+							"pm.test(\"Check average price in response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('error');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": "{{URL}}/api/average-price/"
+			},
+			"response": []
+		},
+		{
+			"name": "get bitcoin tickers list without queryparams. Success 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for status 400",
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test for JSON response",
+							"pm.test(\"Response is JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"// Test for specific field in response",
+							"pm.test(\"Check average price in response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('count');",
+							"    pm.expect(jsonData).to.have.property('next');",
+							"    pm.expect(jsonData).to.have.property('previous');",
+							"    pm.expect(jsonData).to.have.property('results');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": "{{URL}}/api/ticker-list/"
+			},
+			"response": []
+		},
+		{
+			"name": "get bitcoin tickers list with queryparams since, until and page. Wait 20 seconds to give cron time to generate data in redis. Success 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for status 400",
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test for JSON response",
+							"pm.test(\"Response is JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"// Test for specific field in response",
+							"pm.test(\"Check average price in response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('count');",
+							"    pm.expect(jsonData).to.have.property('next');",
+							"    pm.expect(jsonData).to.have.property('previous');",
+							"    pm.expect(jsonData).to.have.property('results');",
+							"",
+							"    // Check if results is not empty",
+							"    pm.expect(jsonData.results).to.not.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function sleep(ms) {",
+							"    return new Promise(resolve => setTimeout(resolve, ms));",
+							"}",
+							"",
+							"(async function() {",
+							"    console.log(\"Esperando 22 segundos...\");",
+							"    await sleep(22000);",
+							"    console.log(\"22 segundos completados.\");",
+							"    ",
+							"    // Obtener la hora actual en milisegundos",
+							"    const currentTimestamp = Math.floor(Date.now() / 1000);",
+							"    ",
+							"    // Resta 22 segundos al timestamp actual",
+							"    const previousTimestamp = currentTimestamp - 22;",
+							"    ",
+							"    // Guarda el timestamp en una variable de entorno de Postman",
+							"    pm.environment.set(\"previousTimestamp\", previousTimestamp);",
+							"})();",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": "{{URL}}/api/ticker-list/"
+			},
+			"response": []
+		}
+	]
+}
