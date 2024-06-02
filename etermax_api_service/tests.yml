@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  pytest:
+    container_name: pytest
+    build:
+      context: .
+      dockerfile: compose/local/django/Dockerfile
+    command: pytest
+    volumes:
+      - ./etermax_api_service:/app
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE_TEST}
+    networks:
+      etermax-network:
+    stdin_open: true
+    tty: true
+
+
+networks:
+  etermax-network:

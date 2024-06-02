@@ -32,6 +32,26 @@ Además, incluye una suite de pruebas unitarias.
 - **Nombre de la imagen:** redis
 - **Etiqueta (tag):** 7.2.5-alpine
 
+
+## Framework API REST
+
+Para el desarrollo de este proyecto, se usó Django REST Framework, que es una 
+herramienta de Django que busca crear APIs Web robustas y eficientes.
+La desición de usar este framework es su facilidad de uso, flexibilidad y conjunto 
+de características extensas lo convierten en una opción preferida para el desarrollo 
+de este microservicio.
+
+## Persistencia de los datos
+
+La base de datos seleccionada para almacenar la data del precio del Bitcoin y 
+timestamp, fue Redis. La desición del uso de la misma fue que me resultó interesante
+probar esta db y salir de lo tradicional para la persistencia de los datos (mongo por
+ejemplo), para el desarrollo del proyecto. Claramente la db de redis, en algún lapso 
+de tiempo muy extendido, habrá generado un volumen de datos muy grande y no es la 
+mejor la opción para un marco de trabajo productivo. 
+También usé Redis como broker de mensajería, donde recibe tareas de la aplicación y 
+las pone en una cola.
+
 ## Librerías Usadas
 
 - **Celery:** 5.4.0
@@ -45,6 +65,7 @@ Además, incluye una suite de pruebas unitarias.
 - **Requests:** 2.32.3
 
 ## Sobre Docker y docker-compose
+
 El Proyecto se realizó aplicando un entorno de docker y docker-compose.
 
 Docker es una plataforma de contenedorización que permite a los desarrolladores empaquetar 
@@ -184,7 +205,7 @@ y también cumple la función de almecenamiento de toda la data que proviene de 
 luego de procesarla)
 
 
-#### Almacenamiento de Precio de Bitcoin y procesi de ejecución tareas recurrentes
+#### Almacenamiento de Precio de Bitcoin y proceso de ejecución tareas recurrentes
 
 Cada 10 segundos, se obtiene el precio del Bitcoin en pesos argentinos en un cierto 
 timestamp, usando la api de buenbit y se almacena en la base de datos Redis usando 
@@ -232,18 +253,21 @@ timestamp.
 
 
 ## Ejecución y uso del Microservicio
+Para levantar el proyecto, debemos ubicarnos en la carpeta donde se encuentra el 
+archivo docker-compose.yml (en la carpeta principal) y ejecutar siguientes pasos
 
-Para proceder a ejecutar el proyecto deberemos realizar los siguientes pasos
-
-Constrir las imágenes del proyecto
++ Ejecutar el comando para generar las imágenes del proyecto (se ejecuta solamente 
+una única vez para construír la imágen e instalar todas las dependencias en ella)
 ```
 docker-compose build
 ```
 
-Para levantar el proyecto
++ Para correr el proyecto
 ```
 docker-compose up
 ```
+
+## Endpoints
 
 Luego de levantar el proyecto, podemos ingresar a los siguientes endpoints:
 
@@ -308,7 +332,8 @@ Respuesta:
 ## Tests
 Se utilizó pytest como herramienta de testing para Python.
 
-Para poder ejecutar los tests podemos correr el siguiente comando
+Para poder ejecutar los tests debemos ubicarnos en la carpeta donde se encuentra el 
+archivo tests.yml (en la carpeta principal) y correr el siguiente comando
 ```
-docker-compose run --rm etermax-api-service pytest -s -vv --disable-warnings
+docker-compose -f tests.yml run --rm pytest
 ```
