@@ -332,7 +332,29 @@ Respuesta:
 ## Tests
 Se utilizó pytest como herramienta de testing para Python.
 
-Para poder ejecutar los tests debemos ubicarnos en la carpeta donde se encuentra el 
+* Se realizaron tests de integración para los endpoints average-price y 
+ticker-list de la API de Ticker. Se utilizaron unittest.mock, APITestCase y 
+APIClient para simular y probar la funcionalidad de la API sin realizar conexiones 
+reales a Redis. 
+Estos tests se encuentran en la ruta etermax_api_service/ticker/tests.py
+
+* Se realizaron tests de integración en postman para testear los endpoints average-price y 
+ticker-list. En general validan que las respuestas sean 200, 400 y validaciones de campos
+en las respuestas de los json. Uno de los test agregados espera 22 segundos para darle 
+tiempo a los procesos de cargar datos en redis y validar que los resultados no traigan 
+una lista de elementos vacia.
+Estos tests se exportraron desde postman y se encuentran en la ruta 
+etermax_api_service/etermax-integrations-tests.json
+
+* Se generaron tests unitarios para los metodos que realizan las peticiones a la api de
+buenbit. Se mockean la requests get para simular una respuesta de la api de buenbit y 
+testear los casos exitos y excepciones. Estos tests se encuentran en la ruta 
+etermax_api_service/services/buenbit/tests.py .
+
+Se generaron 11 tests en le proyecto, más los test de integración en postman
+
+Para poder ejecutar los tests debemos ubicarnos en la carpeta donde se en
+cuentra el 
 archivo tests.yml (en la carpeta principal) y correr el siguiente comando
 ```
 docker-compose -f tests.yml run --rm pytest
