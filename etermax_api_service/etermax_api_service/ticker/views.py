@@ -5,7 +5,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common import convert_to_float
-from ticker.serializers import TickerSerializer, TickerAveragePriceSerializer, TickerPriceSerializer
+from ticker.serializers import (
+    TickerSerializer,
+    TickerAveragePriceSerializer,
+    TickerPriceSerializer
+)
 from ticker.ticker import BuenbitTicker
 
 

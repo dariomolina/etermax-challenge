@@ -276,12 +276,24 @@ Luego de levantar el proyecto, podemos ingresar a los siguientes endpoints:
 Retorna el promedio de precio entre dos timestamps dados
 Es requisito agregar los queryparams since y until para el funcionamiento correcto del endpoint
 ```
-GET http://localhost:8000/api/average-price/?since=1717135270&until=1717135429
+GET http://localhost:8000/api/ticker-average-price/?since=1717276416&until=1817135429
 ```
 Respuesta:
 ```
 {
     "average_price": 84873600.0
+}
+```
+
+* ### Ticker price
+Retorna un json con el valor del precio en el timestamp dado
+```
+GET http://localhost:8000/api/ticker-price/?timestamp=1717397498
+```
+Respuesta:
+```
+{
+    "price": 86545000.0
 }
 ```
 
