@@ -21,3 +21,13 @@ class TickerSerializer(serializers.Serializer):
     """
     timestamp = serializers.IntegerField(required=True)
     price = serializers.FloatField(required=True)
+
+
+class TickerPriceSerializer(serializers.Serializer):
+    """
+    Serializer for the price of tickers.
+
+    Fields:
+        price (float): The price of the tickers.
+    """
+    price = serializers.FloatField(required=True)

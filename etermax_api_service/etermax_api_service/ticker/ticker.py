@@ -140,10 +140,36 @@ class BuenbitTicker(TickerManagerDataBase):
 
         return average_price
 
+    def get_price(self, timestamp: str) -> Dict:
+        """
+        Retrieves the price of a ticker for a specific timestamp.
+
+        Parameters:
+        timestamp (str): The timestamp for which the price is to be retrieved.
+
+        Returns:
+        Dict: A dictionary with the key 'price' and the corresponding price value.
+              If no price is found for the given timestamp, returns {'price': None}.
+        """
+        # Initialize the dictionary with price set to None
+        price = {"price": None}
+
+        # Fetch the list of tickers within the specified timestamp range
+        range_data = self.get_tickers_list(
+            since_timestamp=timestamp,
+            until_timestamp=timestamp
+        )
+
+        # If data is found in the range, pop the last value
+        if range_data:
+            price = range_data.pop()
+        return price
+
     def get_tickers_list(
         self,
         since_timestamp: str,
-        until_timestamp: str
+        until_timestamp: str,
+        key: str = "prices"
     ) -> List[Dict]:
         """
         Retrieve a list of tickers within a specified time range.
@@ -151,6 +177,7 @@ class BuenbitTicker(TickerManagerDataBase):
         Args:
             since_timestamp (str): The start of the time range.
             until_timestamp (str): The end of the time range.
+            key (str):
 
         Returns:
             List[Dict]: A list of dictionaries, each containing a
@@ -158,7 +185,7 @@ class BuenbitTicker(TickerManagerDataBase):
         """
         # get filtered data from redis
         range_data = self.get_zrange(
-            key="prices",
+            key=key,
             start=since_timestamp,
             end=until_timestamp
         )
