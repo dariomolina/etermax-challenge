@@ -25,14 +25,14 @@ class TickerBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_zrange(self, key: str, start, end):
+    def get_zrange(self, key: str, start: str, end: str):
         """
         Retrieve a range of elements from a sorted set in the cache by score.
 
         Args:
             key (str): The key of the sorted set.
-            start: The minimum score of the range.
-            end: The maximum score of the range.
+            start (str): The minimum score of the range.
+            end (str): The maximum score of the range.
 
         Raises:
             NotImplementedError: If the method is not implemented.
@@ -95,13 +95,18 @@ class BuenbitTicker(TickerManagerDataBase):
         super().__init__()
         self.buenbit_api = BuenbitApiHandle()
 
-    def set_ticker(self, market_identifier: str = "btcars") -> None:
+    def set_ticker(
+        self,
+        market_identifier: str = "btcars",
+        key: str = "prices"
+    ) -> None:
         """
         Fetch ticker data from Buenbit API and store it in the cache.
 
         Args:
             market_identifier (str, optional): The market identifier
             for the API request. Defaults to "btcars".
+            key (str, Optional): Key to obtain queries from the db
         """
         # Retrieves ticker data from Buenbit API
         data = self.buenbit_api.handle(market_identifier)
@@ -110,9 +115,14 @@ class BuenbitTicker(TickerManagerDataBase):
         value = {data["price"]: data["timestamp"]}
 
         # Stores the data in the cache
-        self.set(key="prices", value=value)
+        self.set(key=key, value=value)
 
-    def get_average_price(self, since_timestamp, until_timestamp) -> Dict:
+    def get_average_price(
+        self,
+        since_timestamp: str,
+        until_timestamp: str,
+        key: str = "prices"
+    ) -> Dict:
         """
         Calculate the average price of tickers within a specified
         timestamp range.
@@ -120,13 +130,14 @@ class BuenbitTicker(TickerManagerDataBase):
         Args:
             since_timestamp: The start of the time range.
             until_timestamp: The end of the time range.
+            key (str, Optional): Key to obtain queries from the db
 
         Returns:
             Dict: A dictionary containing the average price.
         """
         # get filtered data from redis
         range_data = self.get_zrange(
-            key="prices",
+            key=key,
             start=since_timestamp,
             end=until_timestamp
         )
@@ -177,7 +188,7 @@ class BuenbitTicker(TickerManagerDataBase):
         Args:
             since_timestamp (str): The start of the time range.
             until_timestamp (str): The end of the time range.
-            key (str):
+            key (str, Optional): Key to obtain queries from the db
 
         Returns:
             List[Dict]: A list of dictionaries, each containing a
